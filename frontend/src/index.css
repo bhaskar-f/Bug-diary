@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.password-masking {
+  -webkit-text-security: disc; /* Magic property for password dots */
+  text-security: disc;
+  letter-spacing: 0.07em; /* Makes dots look better */
+}
+::-webkit-scrollbar {
+  width: 0px;
+}
