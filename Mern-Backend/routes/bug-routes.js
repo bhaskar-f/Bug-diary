@@ -6,6 +6,7 @@ import {
   deleteBug,
   togglePin,
   toggleArchive,
+  getbug,
 } from "../controllers/bug-controler.js";
 import { protect } from "../middlewares/auth-middleware.js";
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 //public
 router.get("/", protect, getBugs);
+router.get("/:id", protect, getbug);
 
 // Protected
 router.post("/", protect, createBug);

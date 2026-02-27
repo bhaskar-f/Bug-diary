@@ -1,11 +1,13 @@
 import Bug from "../models/bug.js";
 import User from "../models/user.js";
+import mongoose from "mongoose";
+import { nanoid } from "nanoid";
 
 //create bug
 export async function createBug(req, res) {
   try {
     const bug = await Bug.create({ ...req.body, createdBy: req.user._id });
-    res.status(201).json(bug);
+    res.status(201).json({ ...bug, bugId: nanoid(5) });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -14,12 +16,22 @@ export async function createBug(req, res) {
 //get all bugs
 export const getBugs = async (req, res) => {
   try {
-    const { status, search, priority, sort, page = 1, limit = 10 } = req.query;
+    const {
+      status,
+      search,
+      priority,
+      sort,
+      archived,
+      page = 1,
+      limit = 10,
+    } = req.query;
 
     const filter = {};
 
     if (status) filter.status = status;
     if (priority) filter.priority = priority;
+    if (archived === "true") filter.archived = true;
+    if (archived === "false") filter.archived = false;
 
     if (search) {
       filter.$or = [
@@ -30,14 +42,20 @@ export const getBugs = async (req, res) => {
       ];
     }
 
-    const sortOption = { createdAt: -1 };
+    let sortOption = { createdAt: -1 };
 
-    if (sort) sortOption = sort;
+    if (sort) {
+      const field = String(sort).startsWith("-")
+        ? String(sort).slice(1)
+        : String(sort);
+      const direction = String(sort).startsWith("-") ? -1 : 1;
+      sortOption = { [field]: direction };
+    }
 
     filter.createdBy = req.user._id;
 
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
+    const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
+    const limitNumber = Math.max(parseInt(limit, 10) || 10, 1);
     const skip = (pageNumber - 1) * limitNumber;
 
     console.log("FILTER:", filter);
@@ -67,9 +85,32 @@ export const getBugs = async (req, res) => {
   }
 };
 
+export async function getbug(req, res) {
+  try {
+    // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    //   return res.status(400).json({ message: "Invalid bug id" });
+    // }
+
+    const bug = await Bug.findOne({ bugId: req.params.id });
+
+    if (!bug) return res.status(404).json({ message: "bug not found" });
+
+    if (bug.createdBy.toString() !== req.user._id.toString())
+      return res.status(403).json({ message: "not allowed" });
+
+    res.json(bug);
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+}
+
 //update bug
 export async function updateBug(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid bug id" });
+    }
+
     //get the bug
     const bug = await Bug.findById(req.params.id);
 
@@ -100,6 +141,10 @@ export async function updateBug(req, res) {
 //delete bug
 export async function deleteBug(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid bug id" });
+    }
+
     const bug = await Bug.findById(req.params.id);
 
     //if bug is not there
@@ -122,6 +167,10 @@ export async function deleteBug(req, res) {
 // Toggle Pin
 export async function togglePin(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid bug id" });
+    }
+
     const bug = await Bug.findById(req.params.id);
     if (!bug) return res.status(404).json({ message: "bug not found" });
 
@@ -141,6 +190,10 @@ export async function togglePin(req, res) {
 // Toggle Archive
 export async function toggleArchive(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid bug id" });
+    }
+
     const bug = await Bug.findById(req.params.id);
     if (!bug) return res.status(404).json({ message: "bug not found" });
 

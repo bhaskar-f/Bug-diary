@@ -7,6 +7,11 @@ const bugSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    bugId: {
+      type: String,
+      unique: true,
+      index: true,
+    },
     area: {
       type: String,
       trim: true,
@@ -21,9 +26,11 @@ const bugSchema = new mongoose.Schema(
       enum: ["dev", "staging", "prod"],
       default: "dev",
     },
-    stepsToReproduce: {
-      type: String,
-    },
+    stepsToReproduce: [
+      {
+        type: String,
+      },
+    ],
     rootCause: {
       type: String,
     },

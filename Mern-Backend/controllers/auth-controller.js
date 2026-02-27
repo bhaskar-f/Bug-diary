@@ -31,6 +31,14 @@ export async function registerUser(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+// GET /api/auth/me
+export const getMe = async (req, res) => {
+  // req.user is set by your auth middleware (from token)
+  res.json({
+    username: req.user.username,
+    email: req.user.email,
+  });
+};
 
 export async function loginUser(req, res) {
   try {
@@ -51,10 +59,10 @@ export async function loginUser(req, res) {
 
     //check userPassword
     const pass = await user.comparePassword(password);
-    console.log(pass);
+
     //if exist then login
     if (!pass) {
-      res.status(401).json({ message: "invalid password" });
+      return res.status(401).json({ message: "invalid password" });
     }
 
     // 3. generate token
