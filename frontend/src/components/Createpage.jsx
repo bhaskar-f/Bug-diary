@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Leftnav from "./Leftnav";
 import Topnav from "./Topnav";
 import { AnimatePresence, motion } from "framer-motion";
+import api from "../utils/axios.jsx";
+import { deleteDraft, saveDraft } from "../utils/drafts.js";
+import { userContext } from "../utils/UserContext.jsx";
+import { bugContext } from "../utils/Mycontext.jsx";
 
 function Section({ title, children, defaultOpen = true }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -121,10 +126,18 @@ function TagInput({ tags, setTags }) {
 }
 
 export default function Createpage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, clearUser } = useContext(userContext);
+  const { setBugs, getBugs } = useContext(bugContext);
+
   const [title, setTitle] = useState("");
   const [openStatus, setOpenStatus] = useState(false);
   const [openPriority, setPriority] = useState(false);
   const [openenvironment, setEnvironment] = useState(false);
+  const [status, setStatus] = useState("open");
+  const [priority, setPriorityValue] = useState("low");
+  const [environment, setEnvironmentValue] = useState("dev");
   const [area, setArea] = useState("");
   const [description, setDescription] = useState("");
   const [steps, setSteps] = useState("");
@@ -134,8 +147,20 @@ export default function Createpage() {
   const [files, setFiles] = useState([]);
   const [tags, setTags] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [draftId, setDraftId] = useState("");
+  const [draftMessage, setDraftMessage] = useState("");
 
   const [dragOver, setDragOver] = useState(false);
+
+  function removeToken() {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    clearUser();
+    setBugs([]);
+    navigate("/signin");
+  }
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -148,11 +173,112 @@ export default function Createpage() {
     ]);
   };
 
+  useEffect(() => {
+    const incomingDraft = location.state?.draft;
+    if (!incomingDraft || incomingDraft.type !== "create") return;
+
+    setDraftId(incomingDraft.id || "");
+    setTitle(incomingDraft.title || "");
+    setStatus(incomingDraft.status || "open");
+    setPriorityValue(incomingDraft.priority || "low");
+    setEnvironmentValue(incomingDraft.environment || "dev");
+    setArea(incomingDraft.area || "");
+    setDescription(incomingDraft.description || "");
+    setSteps(incomingDraft.steps || "");
+    setAnalysis(incomingDraft.analysis || "");
+    setNotes(incomingDraft.notes || "");
+    setResolution(incomingDraft.resolution || "");
+    setTags(Array.isArray(incomingDraft.tags) ? incomingDraft.tags : []);
+    setFiles(
+      Array.isArray(incomingDraft.screenshots) ? incomingDraft.screenshots : [],
+    );
+    setDraftMessage("Draft loaded");
+  }, [location.state]);
+
+  function handleSaveDraft() {
+    const draft = saveDraft({
+      id: draftId || undefined,
+      type: "create",
+      title,
+      status,
+      priority,
+      environment,
+      area,
+      description,
+      steps,
+      analysis,
+      notes,
+      resolution,
+      tags,
+      screenshots: files.map((item) =>
+        typeof item === "string" ? item : item?.name || "",
+      ),
+    });
+
+    setDraftId(draft.id);
+    setDraftMessage("Draft saved");
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setDraftMessage("");
+    setSubmitError("");
+    setSubmitted(false);
+
+    if (!title.trim()) {
+      setSubmitError("Title is required");
+      return;
+    }
+
+    const stepsToReproduce = steps
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    try {
+      setCreating(true);
+      const payload = {
+        title: title.trim(),
+        status,
+        priority,
+        environment,
+        area: area.trim(),
+        description: description.trim(),
+        stepsToReproduce,
+        rootCause: analysis.trim(),
+        notes: notes.trim(),
+        fix: resolution.trim(),
+        tags: tags.map((tag) => String(tag).trim()).filter(Boolean),
+        screenshots: files
+          .map((item) => (typeof item === "string" ? item : item?.name || ""))
+          .filter(Boolean),
+      };
+
+      await api.post("/bugs", payload);
+      await getBugs();
+      if (draftId) deleteDraft(draftId);
+      setSubmitted(true);
+      navigate("/");
+    } catch (error) {
+      setSubmitError(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Failed to create bug",
+      );
+    } finally {
+      setCreating(false);
+    }
+  }
+
   return (
     <div className="w-full h-screen flex ">
       <Leftnav />
       <div className="w-[80%] h-full flex flex-col">
-        <Topnav />
+        <Topnav
+          removetoken={removeToken}
+          username={user.username}
+          email={user.email}
+        />
         <div className="p-8 overflow-y-auto">
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5">
@@ -169,7 +295,7 @@ export default function Createpage() {
           </div>
 
           {/* Title */}
-          <form className="mt-5">
+          <form onSubmit={handleSubmit} className="mt-5">
             <div>
               <input
                 type="text"
@@ -195,13 +321,15 @@ export default function Createpage() {
                 </label>
                 <select
                   id="status"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
                   onMouseDown={() => {
                     setOpenStatus((prev) => !prev);
                   }}
                   onBlur={() => setOpenStatus(false)}
                   class={`w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-neutral-secondary-medium border border-1 border-zinc-200 hover:border-zinc-300 text-heading text-zinc-800 text-sm rounded-lg focus:outline-none shadow-xs placeholder:text-body focus:border-violet-400 transition-colors `}
                 >
-                  <option selected>Choose Status</option>
+                  <option value="open">Open</option>
                   <option value="open">🟣 Open</option>
                   <option value="in-progress">🔵 In Progress</option>
                   <option value="fixed">🟢 Fixed</option>
@@ -221,11 +349,13 @@ export default function Createpage() {
                 </label>
                 <select
                   id="Priority"
+                  value={priority}
+                  onChange={(e) => setPriorityValue(e.target.value)}
                   onMouseDown={() => setPriority((prev) => !prev)}
                   onBlur={() => setPriority(false)}
                   class="w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-neutral-secondary-medium border border-1 border-zinc-200 text-heading text-zinc-800 text-sm rounded-lg focus:outline-none hover:border-zinc-300 focus:border-violet-400 shadow-xs placeholder:text-body"
                 >
-                  <option selected>Choose Priority</option>
+                  <option value="low">Low</option>
                   <option value="low">🟢 Low</option>
                   <option value="mid">🟡 Medium</option>
                   <option value="high">🟠 High</option>
@@ -246,11 +376,12 @@ export default function Createpage() {
                 </label>
                 <select
                   id="status"
+                  value={environment}
+                  onChange={(e) => setEnvironmentValue(e.target.value)}
                   onMouseDown={() => setEnvironment((prev) => !prev)}
                   onBlur={() => setEnvironment(false)}
                   class="w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-neutral-secondary-medium border border-1 border-zinc-200 text-heading text-zinc-800 text-sm rounded-lg focus:outline-none hover:border-zinc-300 focus:border-violet-400 shadow-xs placeholder:text-body"
                 >
-                  <option selected>Choose Environment</option>
                   <option value="dev">Dev</option>
                   <option value="staging">Staging</option>
                   <option value="prod">Production</option>
@@ -395,6 +526,7 @@ export default function Createpage() {
               <div className="flex items-center gap-2.5">
                 <button
                   type="button"
+                  onClick={handleSaveDraft}
                   className={`px-5 py-2.5 rounded-lg border text-base transition-all duration-150
                      border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300`}
                 >
@@ -402,9 +534,10 @@ export default function Createpage() {
                 </button>
                 <motion.button
                   type="submit"
+                  disabled={creating}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-base font-medium transition-colors duration-150 shadow-sm shadow-violet-600/20"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white text-base font-medium transition-colors duration-150 shadow-sm shadow-violet-600/20"
                 >
                   <AnimatePresence mode="wait">
                     {submitted ? (
@@ -425,13 +558,19 @@ export default function Createpage() {
                         exit={{ opacity: 0, y: -4 }}
                         className="flex items-center gap-1.5"
                       >
-                        + Create a Bug Page
+                        {creating ? "Creating..." : "+ Create a Bug Page"}
                       </motion.span>
                     )}
                   </AnimatePresence>
                 </motion.button>
               </div>
             </div>
+            {submitError && (
+              <p className="mt-3 text-sm text-red-600">{submitError}</p>
+            )}
+            {draftMessage && (
+              <p className="mt-3 text-sm text-green-600">{draftMessage}</p>
+            )}
           </form>
         </div>
       </div>

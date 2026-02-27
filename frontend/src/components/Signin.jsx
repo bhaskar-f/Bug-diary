@@ -4,8 +4,10 @@ import { FaApple } from "react-icons/fa";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import api from "../utils/axios.jsx";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import LeftPanel from "./Leftpanel";
+import { bugContext } from "../utils/Mycontext.jsx";
+import { userContext } from "../utils/UserContext.jsx";
 
 export default function Signin() {
   const [email, setEmail] = useState("");
@@ -15,6 +17,8 @@ export default function Signin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { getBugs } = useContext(bugContext);
+  const { getUser } = useContext(userContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +41,7 @@ export default function Signin() {
         sessionStorage.setItem("token", token); // gone after tab close
       }
 
+      await Promise.all([getBugs(), getUser()]);
       // go to home/dashboard
       navigate("/");
     } catch (err) {
@@ -122,7 +127,7 @@ export default function Signin() {
               <div className="flex gap-2">
                 <input
                   type="checkbox"
-                  onChange={(e) => setRememberme(e.target.value)}
+                  onChange={(e) => setRememberme(e.target.checked)}
                   value={rememberMe}
                   className="border-zinc-300"
                   name="remember me"

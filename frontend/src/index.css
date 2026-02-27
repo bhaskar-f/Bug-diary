@@ -6,5 +6,11 @@
   letter-spacing: 0.07em; /* Makes dots look better */
 }
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 3px;
+  border-radius: 100px;
+  height: 2px;
+}
+::-webkit-scrollbar-thumb {
+  background: #b3b1b1;
+  border-radius: 150px;
 }
