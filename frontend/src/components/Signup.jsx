@@ -4,7 +4,7 @@ import { FaApple } from "react-icons/fa";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 
 import { useState } from "react";
-import LeftPanel from "./Leftpanel";
+import LeftPanel from "./LeftPanel";
 import api from "../utils/axios.jsx";
 
 export default function Signup() {

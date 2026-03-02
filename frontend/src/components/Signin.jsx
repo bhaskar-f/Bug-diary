@@ -5,7 +5,7 @@ import { LuEye, LuEyeClosed } from "react-icons/lu";
 import api from "../utils/axios.jsx";
 
 import { useState, useContext } from "react";
-import LeftPanel from "./Leftpanel";
+import LeftPanel from "./LeftPanel";
 import { bugContext } from "../utils/Mycontext.jsx";
 import { userContext } from "../utils/UserContext.jsx";
 
