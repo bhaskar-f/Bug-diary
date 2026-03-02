@@ -28,11 +28,11 @@ function BugCard({ bug, showPin }) {
   return (
     <Link
       to={`/${bug.bugId}/bugdetails`}
-      className="bug w-90 h-75 bg-zinc-100 rounded-lg flex flex-col items-center p-2 shadow-[0_0_12px_0.12px_rgba(0,0,0,0.1)] hover:shadow-[inset_0_0_3px_rgba(0,0,0,0.1)]"
+      className="bug w-full min-h-[16.5rem] bg-zinc-100 rounded-lg flex flex-col items-center p-1.5 shadow-[0_0_12px_0.12px_rgba(0,0,0,0.1)] hover:shadow-[inset_0_0_3px_rgba(0,0,0,0.1)]"
     >
-      <div className="w-[100%] h-[65%] bg-zinc-200 rounded-lg relative overflow-hidden shadow-sm">
+      <div className="w-full h-36 sm:h-40 bg-zinc-200 rounded-lg relative overflow-hidden shadow-sm">
         {showPin && (
-          <span className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-md bg-white/80 text-zinc-700 text-xs font-medium border border-zinc-200">
+          <span className="absolute top-1.5 right-1.5 z-10 px-1.5 py-0.5 rounded-md bg-white/80 text-zinc-700 text-[10px] font-medium border border-zinc-200">
             Pinned
           </span>
         )}
@@ -46,7 +46,7 @@ function BugCard({ bug, showPin }) {
           className="w-full h-full object-cover transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
         />
         <span
-          className={`absolute top-0 left-1/2 font-medium -translate-x-[50%] min-w-auto h-7 ${
+          className={`absolute top-0 left-1/2 font-medium -translate-x-[50%] min-w-auto h-6 ${
             bug.status === "fixed"
               ? "bg-emerald-500/60 text-green-950"
               : bug.status === "open"
@@ -54,26 +54,30 @@ function BugCard({ bug, showPin }) {
                 : bug.status === "in-progress"
                   ? "bg-yellow-500/60 text-yellow-950"
                   : "bg-zinc-500/60 text-zinc-950"
-          } rounded-b-md px-2`}
+          } rounded-b-md px-1.5 text-[11px]`}
         >
           {bug.status}
         </span>
       </div>
 
-      <h1 className="text-[1.14rem] font-semibold text-zinc-800 hover:text-black cursor-pointer mt-2 leading-[1.1] line-clamp-2">
+      <h1 className="text-[1.03rem] font-semibold text-zinc-800 hover:text-black cursor-pointer mt-1.5 leading-[1.1] line-clamp-2">
         {bug.title}
       </h1>
 
-      <div className="w-full flex justify-between mt-2">
-        <span className="text-sm">Last updated {timeAgo(bug.updatedAt)}</span>
-        <div className="area text-sm">{bug.area || "General"}</div>
+      <div className="w-full flex justify-between gap-2 mt-1.5">
+        <span className="text-[11px] sm:text-xs">
+          Last updated {timeAgo(bug.updatedAt)}
+        </span>
+        <div className="area text-[11px] sm:text-xs shrink-0">
+          {bug.area || "General"}
+        </div>
       </div>
 
-      <div className="tags text-xs w-full flex flex-wrap gap-1 mt-2">
+      <div className="tags text-[11px] w-full flex flex-wrap gap-1 mt-1.5">
         {(bug.tags || []).slice(0, 4).map((tag, tagIndex) => (
           <span
             key={tagIndex}
-            className="inline-flex px-2 py-[1px] border border-zinc-500 rounded-2xl items-center"
+            className="inline-flex px-1.5 py-[1px] border border-zinc-500 rounded-2xl items-center"
           >
             {"#" + tag}
           </span>
@@ -140,26 +144,26 @@ export default function Home() {
   }, [activeBugs]);
 
   return (
-    <div className="w-screen h-screen flex items-center">
+    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
       <Leftnav />
-      <div className="w-[80%] h-full flex flex-col">
+      <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
           removetoken={removeToken}
           username={user.username}
           email={user.email}
         />
 
-        <div className="w-full h-full overflow-y-auto">
-          <div className="px-8 py-7">
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-              <div className="flex flex-col items-center justify-center  p-8 max-h-[400px]">
-                <h1 className="text-[1.6rem] font-semibold leading-tight text-center">
+        <div className="flex-1 min-h-0 w-full overflow-y-auto">
+          <div className="px-3.5 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+              <div className="flex flex-col items-center justify-center p-5 sm:p-6 max-h-[360px]">
+                <h1 className="text-[1.2rem] sm:text-[1.45rem] font-semibold leading-tight text-center">
                   Hi {user.username || "Boss"}! Welcome Back 👋
                 </h1>
-                <div className="w-[60%] mt-8">
+                <div className="w-full sm:w-2/3 md:w-1/2 mt-6">
                   <Link
                     to="/create"
-                    className="font-medium text-[1.03rem] flex items-center justify-center bg-violet-600 text-white border border-violet-600 gap-2 hover:bg-white hover:text-violet-700 hover:border-violet-600 py-3 px-3 rounded-lg duration-300"
+                    className="font-medium text-[0.95rem] flex items-center justify-center bg-violet-600 text-white border border-violet-600 gap-1.5 hover:bg-white hover:text-violet-700 hover:border-violet-600 py-2.5 px-2.5 rounded-lg duration-300"
                   >
                     <i className="ri-add-large-line font-bold"></i>
                     Create a Bug Page
@@ -167,10 +171,10 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="rounded-lg border-2 border-zinc-200 bg-white max-h-[300px] p-4 overflow-y-auto">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-xl font-semibold">Pinned Bugs</h2>
-                  <span className="text-sm text-zinc-500">
+              <div className="rounded-lg border-2 border-zinc-200 bg-white max-h-[300px] p-3.5 overflow-y-auto">
+                <div className="flex items-center justify-between mb-2.5">
+                  <h2 className="text-lg font-semibold">Pinned Bugs</h2>
+                  <span className="text-xs text-zinc-500">
                     {pinnedBugs.length}
                   </span>
                 </div>
@@ -187,12 +191,12 @@ export default function Home() {
                       <Link
                         key={bug._id || bug.bugId}
                         to={`/${bug.bugId}/bugdetails`}
-                        className="block text-sm rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 hover:bg-zinc-100"
+                        className="block text-xs rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 hover:bg-zinc-100"
                       >
-                        <div className="font-medium text-zinc-800 truncate">
+                        <div className="font-medium text-zinc-800 text-[0.82rem] truncate">
                           {bug.title}
                         </div>
-                        <div className="text-xs text-zinc-500 mt-1">
+                        <div className="text-[11px] text-zinc-500 mt-0.5">
                           Updated {timeAgo(bug.updatedAt)}
                         </div>
                         <button
@@ -202,7 +206,7 @@ export default function Home() {
                             e.stopPropagation();
                             unpin(bug._id);
                           }}
-                          className="mt-2 text-zinc-500 hover:text-zinc-800 cursor-pointer"
+                          className="mt-1.5 text-zinc-500 hover:text-zinc-800 cursor-pointer"
                           title="Unpin bug"
                         >
                           <RiUnpinLine />
@@ -214,20 +218,20 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-8 rounded-lg border-2 border-zinc-800 bg-white">
-              <div className="px-4 py-4 border-b border-zinc-200 flex items-center justify-between">
-                <h2 className="text-3xl font-semibold leading-none">
+            <div className="mt-6 rounded-lg border-2 border-zinc-200 bg-white">
+              <div className="px-3.5 py-3.5 border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <h2 className="text-xl sm:text-2xl font-semibold leading-none">
                   Recent Bugs
                 </h2>
                 <Link
                   to="/bug-pages"
-                  className="text-sm px-3 py-1.5 rounded-md border border-zinc-300 hover:bg-zinc-100 text-zinc-700"
+                  className="text-xs px-2.5 py-1.5 rounded-md border border-zinc-300 hover:bg-zinc-100 text-zinc-700"
                 >
                   View all
                 </Link>
               </div>
 
-              <div className="p-4">
+              <div className="p-3.5">
                 {loading && (
                   <div className="text-zinc-500">Loading recent bugs...</div>
                 )}
@@ -237,7 +241,7 @@ export default function Home() {
                   </div>
                 )}
                 {!loading && recentBugs.length > 0 && (
-                  <div className="bugs min-h-48 w-[100%] mb-2 p-[4px] flex flex-wrap gap-[13px]">
+                  <div className="bugs min-h-40 w-full mb-2 p-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
                     {recentBugs.map((bug) => (
                       <BugCard
                         key={bug._id || bug.bugId}

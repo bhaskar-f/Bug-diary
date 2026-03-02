@@ -29,8 +29,6 @@ export async function getStatusOverview(req, res) {
         },
       },
     ]);
-    console.log(statusOverview);
-
     //count by area
     const areaOverview = await Bug.aggregate([
       {
@@ -45,8 +43,6 @@ export async function getStatusOverview(req, res) {
         },
       },
     ]);
-    console.log(areaOverview);
-
     //count by tag
     const tagsOverview = await Bug.aggregate([
       {
@@ -64,9 +60,6 @@ export async function getStatusOverview(req, res) {
         },
       },
     ]);
-
-    console.log(tagsOverview);
-
     // 4) Total time spent
     const timeStats = await Bug.aggregate([
       {
@@ -81,9 +74,6 @@ export async function getStatusOverview(req, res) {
         },
       },
     ]);
-
-    console.log(timeStats);
-
     //count by bug fixed over time by day
     const FixedByDayOverview = await Bug.aggregate([
       {
@@ -100,9 +90,6 @@ export async function getStatusOverview(req, res) {
         },
       },
     ]);
-
-    console.log(FixedByDayOverview);
-
     res.json({
       statusOverview,
       areaOverview,

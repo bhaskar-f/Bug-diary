@@ -87,10 +87,7 @@ function TagInput({ tags, setTags }) {
       setTags(tags.slice(0, -1));
   };
   return (
-    <div
-      className={`flex flex-wrap gap-1.5 min-h-[42px] px-3 py-2 border rounded-lg transition-colors bg-white border-zinc-200 focus-within:border-violet-400"
-      `}
-    >
+    <div className="flex flex-wrap gap-1.5 min-h-[42px] px-3 py-2 border rounded-lg transition-colors bg-white border-zinc-200 focus-within:border-violet-400">
       <AnimatePresence>
         {tags.map((tag) => (
           <motion.span
@@ -271,15 +268,15 @@ export default function Createpage() {
   }
 
   return (
-    <div className="w-full h-screen flex ">
+    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
       <Leftnav />
-      <div className="w-[80%] h-full flex flex-col">
+      <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
           removetoken={removeToken}
           username={user.username}
           email={user.email}
         />
-        <div className="p-8 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5">
             <a
@@ -314,9 +311,9 @@ export default function Createpage() {
                 </motion.p>
               )}
             </div>
-            <div className="w-full mt-5 flex gap-5">
-              <div className="relative w-[15%]">
-                <label className=" text-sm font-medium text-heading text-zinc-400">
+            <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="relative">
+                <label className="text-sm font-medium text-zinc-400">
                   Status
                 </label>
                 <select
@@ -327,7 +324,7 @@ export default function Createpage() {
                     setOpenStatus((prev) => !prev);
                   }}
                   onBlur={() => setOpenStatus(false)}
-                  class={`w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-neutral-secondary-medium border border-1 border-zinc-200 hover:border-zinc-300 text-heading text-zinc-800 text-sm rounded-lg focus:outline-none shadow-xs placeholder:text-body focus:border-violet-400 transition-colors `}
+                  className="w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-800 text-sm rounded-lg focus:outline-none shadow-xs focus:border-violet-400 transition-colors"
                 >
                   <option value="open">Open</option>
                   <option value="open">🟣 Open</option>
@@ -340,11 +337,11 @@ export default function Createpage() {
             ${openStatus ? "rotate-180" : "rotate-0"}
           `}
                 >
-                  <i class="ri-arrow-down-s-line"></i>
+                  <i className="ri-arrow-down-s-line"></i>
                 </div>
               </div>
-              <div className="relative w-[15%]">
-                <label class=" text-sm font-medium text-heading text-zinc-400">
+              <div className="relative">
+                <label className=" text-sm font-medium text-zinc-400">
                   Priority
                 </label>
                 <select
@@ -353,7 +350,7 @@ export default function Createpage() {
                   onChange={(e) => setPriorityValue(e.target.value)}
                   onMouseDown={() => setPriority((prev) => !prev)}
                   onBlur={() => setPriority(false)}
-                  class="w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-neutral-secondary-medium border border-1 border-zinc-200 text-heading text-zinc-800 text-sm rounded-lg focus:outline-none hover:border-zinc-300 focus:border-violet-400 shadow-xs placeholder:text-body"
+                  className="w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-white border border-zinc-200 text-zinc-800 text-sm rounded-lg focus:outline-none hover:border-zinc-300 focus:border-violet-400 shadow-xs"
                 >
                   <option value="low">Low</option>
                   <option value="low">🟢 Low</option>
@@ -367,20 +364,20 @@ export default function Createpage() {
             ${openPriority ? "rotate-180" : "rotate-0"}
           `}
                 >
-                  <i class="ri-arrow-down-s-line"></i>
+                  <i className="ri-arrow-down-s-line"></i>
                 </div>
               </div>
-              <div className="relative w-[17%]">
-                <label className=" text-sm font-medium text-heading text-zinc-400">
+              <div className="relative">
+                <label className=" text-sm font-medium text-zinc-400">
                   Environment
                 </label>
                 <select
-                  id="status"
+                  id="environment"
                   value={environment}
                   onChange={(e) => setEnvironmentValue(e.target.value)}
                   onMouseDown={() => setEnvironment((prev) => !prev)}
                   onBlur={() => setEnvironment(false)}
-                  class="w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-neutral-secondary-medium border border-1 border-zinc-200 text-heading text-zinc-800 text-sm rounded-lg focus:outline-none hover:border-zinc-300 focus:border-violet-400 shadow-xs placeholder:text-body"
+                  className="w-full mt-2.5 cursor-pointer appearance-none px-3 py-2.5 bg-white border border-zinc-200 text-zinc-800 text-sm rounded-lg focus:outline-none hover:border-zinc-300 focus:border-violet-400 shadow-xs"
                 >
                   <option value="dev">Dev</option>
                   <option value="staging">Staging</option>
@@ -392,10 +389,10 @@ export default function Createpage() {
             ${openenvironment ? "rotate-180" : "rotate-0"}
           `}
                 >
-                  <i class="ri-arrow-down-s-line"></i>
+                  <i className="ri-arrow-down-s-line"></i>
                 </div>
               </div>
-              <div className="flex flex-col mt-1">
+              <div className="flex flex-col">
                 <span className={`text-sm font-medium text-zinc-400`}>
                   Area
                 </span>
@@ -404,7 +401,7 @@ export default function Createpage() {
                   value={area}
                   onChange={(e) => setArea(e.target.value)}
                   placeholder="e.g. Auth, UI…"
-                  className={`px-3 py-2.5 mt-2.5 rounded-lg border text-sm outline-none transition-colors duration-150 bg-white border-zinc-200 text-zinc-800 placeholder-zinc-400 hover:border-zinc-300 focus:border-violet-400 shadow-xs`}
+                  className="w-full px-3 py-2.5 mt-2.5 rounded-lg border text-sm outline-none transition-colors duration-150 bg-white border-zinc-200 text-zinc-800 placeholder-zinc-400 hover:border-zinc-300 focus:border-violet-400 shadow-xs"
                 />
               </div>
             </div>
@@ -517,18 +514,15 @@ export default function Createpage() {
             </Section>
 
             {/* Actions — purple button matches homepage CTA */}
-            <div
-              className={`flex mt-5  items-center justify-between pt-7 border-t border-zinc-200`}
-            >
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mt-5 pt-7 border-t border-zinc-200">
               <p className={`text-xs text-zinc-400`}>
                 All fields except title are optional
               </p>
-              <div className="flex items-center gap-2.5">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full sm:w-auto">
                 <button
                   type="button"
                   onClick={handleSaveDraft}
-                  className={`px-5 py-2.5 rounded-lg border text-base transition-all duration-150
-                     border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300`}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg border text-base transition-all duration-150 border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300 cursor-pointer"
                 >
                   Save Draft
                 </button>
@@ -537,7 +531,7 @@ export default function Createpage() {
                   disabled={creating}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white text-base font-medium transition-colors duration-150 shadow-sm shadow-violet-600/20"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white text-base font-medium transition-colors duration-150 shadow-sm cursor-pointer shadow-violet-600/20"
                 >
                   <AnimatePresence mode="wait">
                     {submitted ? (
@@ -556,7 +550,7 @@ export default function Createpage() {
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
-                        className="flex items-center gap-1.5"
+                        className="flex items-center gap-1.5 "
                       >
                         {creating ? "Creating..." : "+ Create a Bug Page"}
                       </motion.span>

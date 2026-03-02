@@ -222,8 +222,8 @@ function DetailRow({ label, children }) {
 
 export default function Bugdetails() {
   const { bugId } = useParams();
-  const { user } = useContext(userContext);
-  const { getBugs } = useContext(bugContext);
+  const { user, clearUser } = useContext(userContext);
+  const { getBugs, setBugs } = useContext(bugContext);
   const [actionLoading, setActionLoading] = useState("");
   const [bug, setBug] = useState({
     stepsToReproduce: [],
@@ -238,6 +238,14 @@ export default function Bugdetails() {
     if (typeof value === "string" && value.trim()) return [value];
     return [];
   };
+
+  function removeToken() {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    clearUser();
+    setBugs([]);
+    window.location.href = "/signin";
+  }
 
   function timeAgo(dateString) {
     const now = new Date();
@@ -359,11 +367,15 @@ export default function Bugdetails() {
   }
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
       <Leftnav />
-      <div className="w-[80%] h-full flex flex-col">
-        <Topnav username={user.username} email={user.email} />
-        <div className="p-8  overflow-y-auto">
+      <div className="flex-1 min-w-0 h-full flex flex-col">
+        <Topnav
+          removetoken={removeToken}
+          username={user.username}
+          email={user.email}
+        />
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
           {/* Breadcrumb */}
           <div className="flex  items-center gap-1.5">
             <a
@@ -377,13 +389,13 @@ export default function Bugdetails() {
               {bug.title}
             </span>
           </div>
-          <div className="w-full h-full mt-7">
+          <div className="w-full mt-7">
             <div className="firstSection ">
               <span className="text-zinc-400 font-medium">
                 Created {timeAgo(bug.createdAt)}
               </span>
               <h1 className="text-[1.5rem] font-bold">{bug.title}</h1>
-              <div className="flex items-center gap-3 text-sm mt-4">
+              <div className="flex flex-wrap items-center gap-3 text-sm mt-4">
                 {/* Open */}
                 <div
                   className={`flex items-center gap-2 px-4 py-1 rounded-lg border ${
@@ -496,7 +508,11 @@ export default function Bugdetails() {
                           key={index}
                           className="border rounded-lg p-4 flex items-center justify-center text-zinc-400"
                         >
-                          <img src={img} alt={`"screenshot"+${index + 1}`} />
+                          <img
+                            src={img}
+                            alt={`"screenshot"+${index + 1}`}
+                            className="max-h-64 w-full object-contain"
+                          />
                         </div>
                       );
                     })}

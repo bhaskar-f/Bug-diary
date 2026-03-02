@@ -52,12 +52,12 @@ export default function Signin() {
   };
 
   return (
-    <div className="w-screen h-screen  p-5 flex justify-between gap-5">
-      <div className="leftContainer w-[50%] h-full">
+    <div className="h-screen w-full p-2 sm:p-3 lg:p-4 flex flex-col lg:flex-row justify-between gap-3 sm:gap-4 bg-zinc-50 overflow-hidden">
+      <div className="leftContainer hidden lg:block lg:w-[56%] h-full">
         <LeftPanel />
       </div>
 
-      <div className="w-[50%] h-full shadow-lg rounded-lg flex flex-col justify-center items-center">
+      <div className="w-full lg:w-[44%] xl:w-[42%] h-full shadow-lg rounded-lg flex flex-col justify-center items-center px-4 py-4 sm:px-5 sm:py-5 lg:px-6 bg-white">
         <div className="w-8 h-8 bg-white rounded-3xl flex items-center justify-center">
           <div
             className="w-full h-full rounded-md
@@ -70,7 +70,7 @@ export default function Signin() {
             />
           </div>
         </div>
-        <div className="text-center mt-2">
+        <div className="text-center mt-1.5">
           <h1 className="text-[1.3rem] font-semibold text-shadow-xs">
             Welcome Back!
           </h1>
@@ -78,8 +78,8 @@ export default function Signin() {
             Enter your credencials to jump back in.
           </h4>
         </div>
-        <div className="w-[45%]">
-          <form onSubmit={handleSubmit} className="flex flex-col  w-full mt-9">
+        <div className="w-full max-w-[26rem]">
+          <form onSubmit={handleSubmit} className="flex flex-col w-full mt-5">
             <label className="font-semibold">Email</label>
             <input
               type="email"
@@ -87,7 +87,7 @@ export default function Signin() {
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               placeholder="example@mail.com"
-              className="w-[100%] border-[2px] border-zinc-300 rounded-md px-3 py-2 font-semibold text-[.89rem] tracking-wider outline-none flex items-center mb-5"
+              className="w-full border-[2px] border-zinc-300 rounded-md px-3 py-2 font-semibold text-[.89rem] tracking-wider outline-none flex items-center mb-4"
             />
             <label htmlFor="" className="font-semibold">
               Password
@@ -123,8 +123,8 @@ export default function Signin() {
                 </div>
               </span>
             </div>
-            <div className="flex justify-between mt-3">
-              <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-3">
+              <div className="flex gap-2 items-center">
                 <input
                   type="checkbox"
                   onChange={(e) => setRememberme(e.target.checked)}
@@ -148,28 +148,28 @@ export default function Signin() {
 
             <button
               type="submit"
-              className="border-none bg-violet-600 hover:bg-violet-500 duration-300 cursor-pointer px-3 py-2 rounded-md font-medium text-white mt-7"
+              className="border-none bg-violet-600 hover:bg-violet-500 duration-300 cursor-pointer px-3 py-2 rounded-md font-medium text-white mt-5"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Log In"}
+              {loading ? "Signing in..." : "Sign In"}
             </button>
 
             {error && <p className="text-red-500">{error}</p>}
           </form>
-          <div className="mt-7 flex gap-4 w-full items-center">
-            <hr className="w-[30%] text-zinc-100" />
+          <div className="mt-5 flex gap-4 w-full items-center">
+            <hr className="flex-1 text-zinc-100" />
             <span className="text-zinc-400">Or log in with</span>
-            <hr className="w-[30%] text-zinc-100" />
+            <hr className="flex-1 text-zinc-100" />
           </div>
-          <div className="flex justify-between mt-4">
-            <Link className="rounded-lg w-[47%] relative inline-flex group items-center justify-center px-10 py-[6px] text-lg font-semibold  cursor-pointer border-2 active:border-zinc-400 overflow-hidden active:shadow-none shadow-xs border-zinc-300">
+          <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
+            <Link className="rounded-lg w-full sm:w-[47%] relative inline-flex group items-center justify-center px-10 py-[6px] text-lg font-semibold cursor-pointer border-2 active:border-zinc-400 overflow-hidden active:shadow-none shadow-xs border-zinc-300">
               <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-zinc-300 rounded-full group-hover:w-40 group-hover:h-40 opacity-10"></span>
               <span className="relative flex items-center justify-center gap-[5px]">
                 <FcGoogle className="text-xl" />
                 <span className="text-[.9rem]">Google</span>
               </span>
             </Link>
-            <Link className="rounded-lg w-[47%] relative inline-flex group items-center justify-center px-10 py-[6px] text-lg font-semibold  cursor-pointer border-2 active:border-zinc-400 overflow-hidden active:shadow-none shadow-xs border-zinc-300">
+            <Link className="rounded-lg w-full sm:w-[47%] relative inline-flex group items-center justify-center px-10 py-[6px] text-lg font-semibold cursor-pointer border-2 active:border-zinc-400 overflow-hidden active:shadow-none shadow-xs border-zinc-300">
               <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-zinc-300 rounded-full group-hover:w-40 group-hover:h-40 opacity-10"></span>
               <span className="relative flex items-center justify-center gap-[5px]">
                 <FaApple className="text-xl" />
@@ -177,7 +177,7 @@ export default function Signin() {
               </span>
             </Link>
           </div>
-          <div className="flex items-center justify-center gap-2 mt-7">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-5 text-center">
             <span className="text-zinc-400 font-normal">
               Don't have an account?
             </span>

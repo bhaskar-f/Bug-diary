@@ -85,17 +85,17 @@ export default function Drafts() {
   }
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
       <Leftnav />
-      <div className="w-[80%] h-full flex flex-col">
+      <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
           removetoken={removeToken}
           username={user.username}
           email={user.email}
         />
 
-        <div className="w-full h-full overflow-y-auto p-8">
-          <div className="flex items-center justify-between mb-5">
+        <div className="flex-1 min-h-0 w-full overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5">
             <div>
               <h1 className="text-2xl font-semibold">Drafts</h1>
               <p className="text-sm text-zinc-500 mt-1">
@@ -108,18 +108,18 @@ export default function Drafts() {
             </div>
           </div>
 
-          <div className="mb-4 flex gap-3 items-center">
+          <div className="mb-4 flex flex-col sm:flex-row gap-3 sm:items-center">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search drafts..."
-              className="w-[320px] rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-violet-500"
+              className="w-full sm:w-80 rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-violet-500"
             />
             <button
               type="button"
               onClick={removeAllDrafts}
-              className="rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
+              className="w-full sm:w-auto rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
             >
               Clear all
             </button>
@@ -135,7 +135,7 @@ export default function Drafts() {
             {filteredDrafts.map((draft) => (
               <div
                 key={draft.id}
-                className="rounded-lg border border-zinc-200 bg-white p-4 flex items-start justify-between gap-4"
+                className="rounded-lg border border-zinc-200 bg-white p-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -157,18 +157,18 @@ export default function Drafts() {
                   </p>
                 </div>
 
-                <div className="shrink-0 flex items-center gap-2">
+                <div className="shrink-0 flex items-center gap-2 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => openDraft(draft)}
-                    className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100"
+                    className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100 w-full sm:w-auto"
                   >
                     Open
                   </button>
                   <button
                     type="button"
                     onClick={() => removeDraft(draft.id)}
-                    className="rounded-md border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
+                    className="rounded-md border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 w-full sm:w-auto"
                   >
                     Delete
                   </button>

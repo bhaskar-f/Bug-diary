@@ -12,7 +12,7 @@ import Drafts from "./components/Drafts";
 
 function App() {
   return (
-    <div className="min-w-screen min-h-screen overflow-hidden">
+    <div className="min-h-screen w-full ">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/bug-pages" element={<BugPages />} />

@@ -52,10 +52,10 @@ export default function LeftPanel() {
   ];
 
   return (
-    <div className="h-full w-full rounded-2xl bg-white p-10 flex flex-col justify-center shadow-sm">
+    <div className="h-full w-full rounded-2xl bg-white p-6 xl:p-7 flex flex-col justify-between shadow-sm overflow-hidden">
       {/* Top badge */}
       <div>
-        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-400 px-3 py-2 text-sm text-gray-700 mb-5">
+        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-400 px-3 py-1.5 text-sm text-gray-700 mb-4">
           <span className="w-2 h-2 bg-red-500 drop-shadow-xl rounded-full">
             {/* <img src="/logo.png" alt="logo" className="w-5" /> */}
           </span>
@@ -63,31 +63,31 @@ export default function LeftPanel() {
         </div>
 
         {/* Headline */}
-        <h1 className="text-3xl font-bold text-gray-900 leading-tight">
+        <h1 className="text-2xl xl:text-[1.7rem] font-bold text-gray-900 leading-tight">
           Track bugs. <br />
           Learn faster. Build better.
         </h1>
 
         {/* Subtext */}
-        <p className="mt-2 text-gray-600 max-w-md">
+        <p className="mt-2 text-sm text-gray-600 max-w-md">
           A private engineering journal to log issues, record fixes, and capture
           what you learn.
         </p>
 
         {/* Feature cards */}
-        <div className="mt-7 space-y-4 font-md">
+        <div className="mt-5 space-y-3 font-md">
           {features.map((f, i) => (
             <div
               key={i}
               ref={(el) => (cardsRef.current[i] = el)}
               onMouseEnter={() => onEnter(i)}
               onMouseLeave={() => onLeave(i)}
-              className="cursor-pointer rounded-xl border border-zinc-300 bg-gray-50 p-4 flex items-start gap-4 transition-colors hover:bg-white"
+              className="cursor-pointer rounded-xl border border-zinc-300 bg-gray-50 p-3 flex items-start gap-3 transition-colors hover:bg-white"
             >
-              <div className="text-2xl">{f.icon}</div>
+              <div className="text-xl">{f.icon}</div>
               <div>
                 <h3 className="font-semibold text-gray-900">{f.title}</h3>
-                <p className="text-sm text-gray-600 mt-1">{f.desc}</p>
+                <p className="text-xs xl:text-sm text-gray-600 mt-1">{f.desc}</p>
               </div>
             </div>
           ))}
@@ -95,11 +95,11 @@ export default function LeftPanel() {
       </div>
 
       {/* Bottom tagline */}
-      <div className="mt-7">
-        <h3 className="text-lg font-semibold text-gray-900">
+      <div className="mt-4">
+        <h3 className="text-base xl:text-lg font-semibold text-gray-900">
           Build better with Bugs. (just kidding!!)
         </h3>
-        <p className="font-md text-gray-600">
+        <p className="text-sm text-gray-600">
           A personal, private diary for developers.
         </p>
       </div>

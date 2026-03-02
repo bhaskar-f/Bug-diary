@@ -166,17 +166,17 @@ export default function Archive() {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
       <Leftnav />
 
-      <div className="w-[80%] h-full flex flex-col">
+      <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
           removetoken={removeToken}
           username={user.username}
           email={user.email}
         />
 
-        <div className="w-full h-full px-6 py-6 bg-zinc-50 overflow-y-auto">
+        <div className="flex-1 min-h-0 w-full px-4 py-5 sm:px-6 sm:py-6 bg-zinc-50 overflow-y-auto">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold text-zinc-900">Archive</h1>
             <p className="text-sm text-zinc-500 mt-1">
@@ -219,7 +219,7 @@ export default function Archive() {
               onChange={setDateFilter}
               options={DATE_FILTERS}
             />
-            <div className="flex items-center gap-2 bg-white border border-zinc-200 rounded-lg px-3 py-2 w-72">
+            <div className="flex items-center gap-2 bg-white border border-zinc-200 rounded-lg px-3 py-2 w-full sm:w-72">
               <span className="text-zinc-400">Search</span>
               <input
                 value={search}
@@ -278,7 +278,7 @@ function FilterSelect({ value, onChange, options }) {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-white border border-zinc-200 rounded-lg px-4 py-2 min-w-[180px] text-sm text-zinc-700 outline-none focus:border-violet-400"
+      className="bg-white border border-zinc-200 rounded-lg px-4 py-2 w-full sm:min-w-[180px] sm:w-auto text-sm text-zinc-700 outline-none focus:border-violet-400"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>

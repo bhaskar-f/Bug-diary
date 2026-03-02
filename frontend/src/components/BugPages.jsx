@@ -26,9 +26,9 @@ function BugCard({ bug }) {
   return (
     <Link
       to={`/${bug.bugId}/bugdetails`}
-      className="bug w-90 h-75 bg-zinc-100 rounded-lg flex flex-col items-center p-2 shadow-[0_0_12px_0.12px_rgba(0,0,0,0.1)] hover:shadow-[inset_0_0_3px_rgba(0,0,0,0.1)]"
+      className="bug w-full min-h-[18rem] bg-zinc-100 rounded-lg flex flex-col items-center p-2 shadow-[0_0_12px_0.12px_rgba(0,0,0,0.1)] hover:shadow-[inset_0_0_3px_rgba(0,0,0,0.1)]"
     >
-      <div className="w-[100%] h-[65%] bg-zinc-200 rounded-lg relative overflow-hidden shadow-sm">
+      <div className="w-full h-40 sm:h-44 bg-zinc-200 rounded-lg relative overflow-hidden shadow-sm">
         {bug.pinned && (
           <span className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-md bg-white/80 text-zinc-700 text-xs font-medium border border-zinc-200">
             Pinned
@@ -37,7 +37,7 @@ function BugCard({ bug }) {
         <img
           src={
             bug.screenshots?.[0] ||
-            "https://images.unsplash.com/photo-1761839256951-10c4468c3621?w=500&auto=format&fit=crop&q=60"
+            "https://images.unsplash.com/photo-1756822084498-e76c94f0f700?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c29mdHdhcmUlMjBidWd8ZW58MHx8MHx8fDA%3D"
           }
           alt="Bug cover"
           className="w-full h-full object-cover transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
@@ -59,9 +59,13 @@ function BugCard({ bug }) {
       <h1 className="text-[1.14rem] font-semibold text-zinc-800 hover:text-black cursor-pointer mt-2 leading-[1.1] line-clamp-2">
         {bug.title}
       </h1>
-      <div className="w-full flex justify-between mt-2">
-        <span className="text-sm">Last updated {timeAgo(bug.updatedAt)}</span>
-        <div className="area text-sm">{bug.area || "General"}</div>
+      <div className="w-full flex justify-between gap-2 mt-2">
+        <span className="text-xs sm:text-sm">
+          Last updated {timeAgo(bug.updatedAt)}
+        </span>
+        <div className="area text-xs sm:text-sm shrink-0">
+          {bug.area || "General"}
+        </div>
       </div>
       <div className="tags text-xs w-full flex flex-wrap gap-1 mt-2">
         {(bug.tags || []).slice(0, 4).map((tag, tagIndex) => (
@@ -124,11 +128,7 @@ export default function BugPages() {
 
   const areaOptions = useMemo(() => {
     const uniqueAreas = Array.from(
-      new Set(
-        bugs
-          .map((bug) => (bug.area || "").trim())
-          .filter(Boolean),
-      ),
+      new Set(bugs.map((bug) => (bug.area || "").trim()).filter(Boolean)),
     );
     return uniqueAreas.sort((a, b) => a.localeCompare(b));
   }, [bugs]);
@@ -144,7 +144,8 @@ export default function BugPages() {
         bug.area?.toLowerCase().includes(query) ||
         (bug.tags || []).join(" ").toLowerCase().includes(query);
 
-      const matchesStatus = statusFilter === "all" || bug.status === statusFilter;
+      const matchesStatus =
+        statusFilter === "all" || bug.status === statusFilter;
       const matchesPriority =
         priorityFilter === "all" || bug.priority === priorityFilter;
       const matchesArea = areaFilter === "all" || bug.area === areaFilter;
@@ -212,16 +213,16 @@ export default function BugPages() {
   }
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
       <Leftnav />
-      <div className="w-[80%] h-full flex flex-col">
+      <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
           removetoken={removeToken}
           username={user.username}
           email={user.email}
         />
 
-        <div className="w-full h-full overflow-y-auto px-8 py-7">
+        <div className="flex-1 min-h-0 w-full overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
           <div className="flex items-center gap-1.5">
             <Link
               to="/"
@@ -235,7 +236,7 @@ export default function BugPages() {
             </span>
           </div>
 
-          <div className="mt-6 mb-4 flex items-center justify-between">
+          <div className="mt-6 mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <h1 className="text-2xl font-semibold">All Bug Pages</h1>
             <span className="text-sm text-zinc-500">
               Showing {filteredBugPages.length} of {allBugPages.length}
@@ -248,13 +249,13 @@ export default function BugPages() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search title, description, area, tag..."
-              className="min-w-[250px] flex-1 px-3 py-2 text-sm rounded-md border border-zinc-300 outline-none focus:border-violet-500"
+              className="w-full sm:min-w-[260px] sm:flex-1 px-3 py-2 text-sm rounded-md border border-zinc-300 outline-none focus:border-violet-500"
             />
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
+              className="w-full sm:w-auto px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
             >
               <option value="all">All Statuses</option>
               <option value="open">Open</option>
@@ -265,7 +266,7 @@ export default function BugPages() {
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
+              className="w-full sm:w-auto px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
             >
               <option value="all">All Priorities</option>
               <option value="low">Low</option>
@@ -277,7 +278,7 @@ export default function BugPages() {
             <select
               value={areaFilter}
               onChange={(e) => setAreaFilter(e.target.value)}
-              className="px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
+              className="w-full sm:w-auto px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
             >
               <option value="all">All Areas</option>
               {areaOptions.map((area) => (
@@ -290,7 +291,7 @@ export default function BugPages() {
             <select
               value={pinFilter}
               onChange={(e) => setPinFilter(e.target.value)}
-              className="px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
+              className="w-full sm:w-auto px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
             >
               <option value="all">Pinned + Unpinned</option>
               <option value="pinned">Only Pinned</option>
@@ -300,7 +301,7 @@ export default function BugPages() {
             <select
               value={archivedFilter}
               onChange={(e) => setArchivedFilter(e.target.value)}
-              className="px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
+              className="w-full sm:w-auto px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
             >
               <option value="all">Archived + Active</option>
               <option value="active">Only Active</option>
@@ -310,7 +311,7 @@ export default function BugPages() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
+              className="w-full sm:w-auto px-3 py-2 text-sm rounded-md border border-zinc-300 bg-white outline-none focus:border-violet-500"
             >
               <option value="updated-desc">Updated: Newest</option>
               <option value="updated-asc">Updated: Oldest</option>
@@ -322,14 +323,16 @@ export default function BugPages() {
 
             <button
               onClick={clearFilters}
-              className="px-3 py-2 text-sm rounded-md border border-zinc-300 hover:bg-zinc-100 text-zinc-700"
+              className="w-full sm:w-auto px-3 py-2 text-sm rounded-md border border-zinc-300 hover:bg-zinc-100 text-zinc-700"
             >
               Clear Filters
             </button>
           </div>
 
-          <div className="bugs min-h-48 w-[100%] mb-10 p-[12px] flex flex-wrap gap-[13px] rounded-lg shadow-[0_0_12px_0.1px_rgba(0,0,0,0.1)]">
-            {loading && <div className="text-zinc-500">Loading bug pages...</div>}
+          <div className="bugs min-h-48 w-full mb-10 p-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 rounded-lg shadow-[0_0_12px_0.1px_rgba(0,0,0,0.1)]">
+            {loading && (
+              <div className="text-zinc-500">Loading bug pages...</div>
+            )}
             {!loading && filteredBugPages.length === 0 && (
               <div className="text-zinc-500">No bug pages found.</div>
             )}

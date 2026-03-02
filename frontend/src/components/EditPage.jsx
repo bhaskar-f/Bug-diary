@@ -327,17 +327,17 @@ export default function EditPage() {
   };
 
   return (
-    <div className="w-full h-screen flex">
+    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
       <Leftnav />
 
-      <div className="w-[80%] h-full flex flex-col">
+      <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
           removetoken={removeToken}
           username={user.username}
           email={user.email}
         />
 
-        <div className="p-8 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
           <div className="flex items-center gap-1.5">
             <Link
               to="/"
@@ -379,8 +379,8 @@ export default function EditPage() {
                 )}
               </div>
 
-              <div className="w-full mt-5 flex gap-5">
-                <div className="relative w-[15%]">
+              <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div className="relative">
                   <label className="text-sm font-medium text-zinc-400">
                     Status
                   </label>
@@ -405,7 +405,7 @@ export default function EditPage() {
                   </div>
                 </div>
 
-                <div className="relative w-[15%]">
+                <div className="relative">
                   <label className="text-sm font-medium text-zinc-400">
                     Priority
                   </label>
@@ -431,7 +431,7 @@ export default function EditPage() {
                   </div>
                 </div>
 
-                <div className="relative w-[17%]">
+                <div className="relative">
                   <label className="text-sm font-medium text-zinc-400">
                     Environment
                   </label>
@@ -456,14 +456,14 @@ export default function EditPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col mt-1">
+                <div className="flex flex-col">
                   <span className="text-sm font-medium text-zinc-400">Area</span>
                   <input
                     type="text"
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
                     placeholder="e.g. Auth, UI..."
-                    className="px-3 py-2.5 mt-2.5 rounded-lg border text-sm outline-none transition-colors duration-150 bg-white border-zinc-200 text-zinc-800 placeholder-zinc-400 hover:border-zinc-300 focus:border-violet-400 shadow-xs"
+                    className="w-full px-3 py-2.5 mt-2.5 rounded-lg border text-sm outline-none transition-colors duration-150 bg-white border-zinc-200 text-zinc-800 placeholder-zinc-400 hover:border-zinc-300 focus:border-violet-400 shadow-xs"
                   />
                 </div>
               </div>
@@ -583,15 +583,15 @@ export default function EditPage() {
                 <TagInput tags={tags} setTags={setTags} />
               </Section>
 
-              <div className="flex mt-5 items-center justify-between pt-7 border-t border-zinc-200">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mt-5 pt-7 border-t border-zinc-200">
                 <p className="text-xs text-zinc-400">
                   All fields except title are optional
                 </p>
-                <div className="flex items-center gap-2.5">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={handleSaveDraft}
-                    className="px-5 py-2.5 rounded-lg border text-base transition-all duration-150 border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg border text-base transition-all duration-150 border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300"
                   >
                     Save Draft
                   </button>
@@ -600,7 +600,7 @@ export default function EditPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
                     disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white text-base font-medium transition-colors duration-150 shadow-sm shadow-violet-600/20"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white text-base font-medium transition-colors duration-150 shadow-sm shadow-violet-600/20"
                   >
                     <AnimatePresence mode="wait">
                       {submitted ? (

@@ -3,11 +3,40 @@ import User from "../models/user.js";
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 
+function hasMissingBugId(doc) {
+  return !doc.bugId || String(doc.bugId).trim() === "";
+}
+
+async function createUniqueBugId() {
+  while (true) {
+    const id = nanoid(8);
+    const exists = await Bug.exists({ bugId: id });
+    if (!exists) return id;
+  }
+}
+
+async function backfillMissingBugIds() {
+  const missing = await Bug.find({
+    $or: [{ bugId: { $exists: false } }, { bugId: null }, { bugId: "" }],
+  });
+
+  for (const bug of missing) {
+    bug.bugId = await createUniqueBugId();
+    await bug.save();
+  }
+}
+
 //create bug
 export async function createBug(req, res) {
   try {
-    const bug = await Bug.create({ ...req.body, createdBy: req.user._id });
-    res.status(201).json({ ...bug, bugId: nanoid(5) });
+    const payload = { ...req.body, createdBy: req.user._id };
+
+    if (hasMissingBugId(payload)) {
+      payload.bugId = await createUniqueBugId();
+    }
+
+    const bug = await Bug.create(payload);
+    res.status(201).json(bug);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -16,6 +45,8 @@ export async function createBug(req, res) {
 //get all bugs
 export const getBugs = async (req, res) => {
   try {
+    await backfillMissingBugIds();
+
     const {
       status,
       search,
@@ -58,8 +89,6 @@ export const getBugs = async (req, res) => {
     const limitNumber = Math.max(parseInt(limit, 10) || 10, 1);
     const skip = (pageNumber - 1) * limitNumber;
 
-    console.log("FILTER:", filter);
-
     const bugs = await Bug.find(filter)
       .sort(sortOption)
       .skip(skip)
@@ -67,7 +96,6 @@ export const getBugs = async (req, res) => {
 
     const total = await Bug.countDocuments(filter);
     const user = await User.findById(req.user._id);
-    console.log(user);
 
     res.json({
       data: bugs,
@@ -87,13 +115,19 @@ export const getBugs = async (req, res) => {
 
 export async function getbug(req, res) {
   try {
-    // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    //   return res.status(400).json({ message: "Invalid bug id" });
-    // }
+    const routeId = req.params.id;
+    const query = mongoose.Types.ObjectId.isValid(routeId)
+      ? { $or: [{ bugId: routeId }, { _id: routeId }] }
+      : { bugId: routeId };
 
-    const bug = await Bug.findOne({ bugId: req.params.id });
+    const bug = await Bug.findOne(query);
 
     if (!bug) return res.status(404).json({ message: "bug not found" });
+
+    if (hasMissingBugId(bug)) {
+      bug.bugId = await createUniqueBugId();
+      await bug.save();
+    }
 
     if (bug.createdBy.toString() !== req.user._id.toString())
       return res.status(403).json({ message: "not allowed" });
