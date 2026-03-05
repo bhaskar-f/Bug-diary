@@ -52,7 +52,7 @@ export default function Signin() {
   };
 
   return (
-    <div className="h-screen w-full p-2 sm:p-3 lg:p-4 flex flex-col lg:flex-row justify-between gap-3 sm:gap-4 bg-zinc-50 overflow-hidden">
+    <div className="min-h-screen w-full p-2 sm:p-3 lg:p-4 flex flex-col lg:flex-row justify-between gap-3 sm:gap-4 bg-zinc-50 lg:h-screen lg:overflow-hidden">
       <div className="leftContainer hidden lg:block lg:w-[56%] h-full">
         <LeftPanel />
       </div>

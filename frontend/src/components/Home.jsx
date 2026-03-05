@@ -144,7 +144,7 @@ export default function Home() {
   }, [activeBugs]);
 
   return (
-    <div className="h-screen w-full bg-zinc-50 lg:flex overflow-hidden">
+    <div className="min-h-screen w-full bg-zinc-50 lg:h-screen lg:flex lg:overflow-hidden">
       <Leftnav />
       <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
