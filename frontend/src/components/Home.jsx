@@ -40,7 +40,7 @@ function BugCard({ bug, showPin }) {
         <img
           src={
             bug.screenshots?.[0] ||
-            "https://images.unsplash.com/photo-1761839256951-10c4468c3621?w=500&auto=format&fit=crop&q=60"
+            "https://images.unsplash.com/photo-1756822084498-e76c94f0f700?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c29mdHdhcmUlMjBidWd8ZW58MHx8MHx8fDA%3D"
           }
           alt="Bug cover"
           className="w-full h-full object-cover transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"

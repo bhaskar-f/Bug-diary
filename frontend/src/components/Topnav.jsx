@@ -33,7 +33,7 @@ export default function Topnav({ removetoken, username, email }) {
 
   return (
     <>
-      <div className="w-full border-b border-zinc-300 bg-white px-3.5 py-2 md:hidden lg:block lg:px-5">
+      <div className="sticky top-0 z-40 w-full border-b border-zinc-300 bg-white px-3.5 py-2 md:hidden lg:static lg:block lg:px-5">
         <div className="relative flex items-center justify-between gap-2 lg:justify-end lg:gap-2.5">
           <button
             type="button"

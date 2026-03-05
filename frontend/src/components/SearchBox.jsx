@@ -92,6 +92,10 @@ export default function SearchBox() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const [useOverlaySearch, setUseOverlaySearch] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(max-width: 1023px)").matches;
+  });
 
   const pageItems = useMemo(() => {
     const profileItem = {
@@ -190,6 +194,26 @@ export default function SearchBox() {
   useEffect(() => {
     setHighlightedIndex(0);
   }, [normalizedQuery, open]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const handleViewportChange = (event) => {
+      setUseOverlaySearch(event.matches);
+    };
+
+    setUseOverlaySearch(mediaQuery.matches);
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleViewportChange);
+      return () =>
+        mediaQuery.removeEventListener("change", handleViewportChange);
+    }
+
+    mediaQuery.addListener(handleViewportChange);
+    return () => mediaQuery.removeListener(handleViewportChange);
+  }, []);
 
   const closeSearch = () => {
     gsap.to(inputWrapRef.current, {
@@ -316,7 +340,11 @@ export default function SearchBox() {
       <div
         ref={inputWrapRef}
         style={{ display: "none" }}
-        className="origin-right relative"
+        className={
+          useOverlaySearch
+            ? "fixed left-3 right-3 top-[3.35rem] md:top-[4.35rem] z-[160] origin-top"
+            : "origin-right relative"
+        }
       >
         <input
           ref={inputRef}
@@ -325,7 +353,11 @@ export default function SearchBox() {
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={handleInputKeyDown}
           placeholder="Search bugs and pages..."
-          className="h-8 w-[12rem] sm:w-[15rem] md:w-[18.5rem] px-3.5 border border-zinc-300 rounded-full outline-none text-sm"
+          className={
+            useOverlaySearch
+              ? "h-9 w-full px-3.5 border border-zinc-300 rounded-full outline-none text-sm bg-white shadow-sm"
+              : "h-8 w-[12rem] sm:w-[15rem] md:w-[18.5rem] px-3.5 border border-zinc-300 rounded-full outline-none text-sm"
+          }
         />
 
         {open && normalizedQuery.length > 0 && normalizedQuery.length < 2 && (
@@ -335,7 +367,13 @@ export default function SearchBox() {
         )}
 
         {shouldShowSuggestions && (
-          <div className="absolute top-[calc(100%+0.45rem)] right-0 z-[99990] w-[16rem] sm:w-[19rem] md:w-[22rem] rounded-lg border border-zinc-200 bg-white shadow-lg overflow-hidden">
+          <div
+            className={
+              useOverlaySearch
+                ? "absolute top-[calc(100%+0.45rem)] right-0 left-0 z-[99990] w-full rounded-lg border border-zinc-200 bg-white shadow-lg overflow-hidden"
+                : "absolute top-[calc(100%+0.45rem)] right-0 z-[99990] w-[16rem] sm:w-[19rem] md:w-[22rem] rounded-lg border border-zinc-200 bg-white shadow-lg overflow-hidden"
+            }
+          >
             <div className="max-h-[16.5rem] overflow-y-auto p-1.5">
               {displayedResults.length === 0 ? (
                 <div className="px-2 py-6 text-center text-[0.82rem] text-zinc-500">

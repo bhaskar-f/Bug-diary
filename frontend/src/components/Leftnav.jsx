@@ -36,7 +36,7 @@ export default function Leftnav({ removetoken, username, email }) {
   const { bugs } = useContext(bugContext);
 
   return (
-    <div className="navbar hidden md:flex w-full lg:w-56 xl:w-72 lg:min-h-screen lg:max-h-screen px-3 py-3.5 sm:px-4 lg:px-5 lg:pt-3.5 flex-row items-center gap-2.5 lg:flex-col lg:items-stretch lg:gap-0 border-b border-zinc-300 lg:border-b-0 lg:border-r bg-white">
+    <div className="navbar hidden md:flex md:sticky md:top-0 md:z-40 lg:static w-full lg:w-56 xl:w-72 lg:min-h-screen lg:max-h-screen px-3 py-3.5 sm:px-4 lg:px-5 lg:pt-3.5 flex-row items-center gap-2.5 lg:flex-col lg:items-stretch lg:gap-0 border-b border-zinc-300 lg:border-b-0 lg:border-r bg-white">
       <div className="logo flex gap-2 items-center shrink-0 lg:w-full">
         <img src="/logo.png" alt="logo" className="w-6" />
         <span className="text-base font-bold">Bug Diary</span>
