@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { FiHome, FiArchive, FiFileText } from "react-icons/fi";
 import { useContext } from "react";
 import { bugContext } from "../utils/Mycontext";
+import NavActions from "./NavActions";
 
 function SideNavLink({ to, icon, label, end = false }) {
   return (
@@ -31,11 +32,11 @@ function SideNavLink({ to, icon, label, end = false }) {
   );
 }
 
-export default function Leftnav() {
+export default function Leftnav({ removetoken, username, email }) {
   const { bugs } = useContext(bugContext);
 
   return (
-    <div className="navbar hidden sm:flex w-full lg:w-56 xl:w-72 lg:min-h-screen lg:max-h-screen px-3 py-3.5 sm:px-4 lg:px-5 lg:pt-3.5 flex-row items-center gap-2.5 lg:flex-col lg:items-stretch lg:gap-0 border-b border-zinc-300 lg:border-b-0 lg:border-r bg-white">
+    <div className="navbar hidden md:flex w-full lg:w-56 xl:w-72 lg:min-h-screen lg:max-h-screen px-3 py-3.5 sm:px-4 lg:px-5 lg:pt-3.5 flex-row items-center gap-2.5 lg:flex-col lg:items-stretch lg:gap-0 border-b border-zinc-300 lg:border-b-0 lg:border-r bg-white">
       <div className="logo flex gap-2 items-center shrink-0 lg:w-full">
         <img src="/logo.png" alt="logo" className="w-6" />
         <span className="text-base font-bold">Bug Diary</span>
@@ -51,9 +52,14 @@ export default function Leftnav() {
         />
         <SideNavLink to="/drafts" icon={<FiFileText />} label="Drafts" />
       </div>
-      <span className="ml-auto shrink-0 text-xs text-zinc-500 inline-block lg:hidden">
-        {bugs.length} bugs
-      </span>
+      <div className="hidden md:flex lg:hidden ml-auto items-center gap-2 shrink-0">
+        <span className="text-xs text-zinc-500">{bugs.length} bugs</span>
+        <NavActions
+          removetoken={removetoken}
+          username={username}
+          email={email}
+        />
+      </div>
 
       <h1 className="mt-4 font-semibold text-[0.98rem] text-zinc-600 hidden lg:block">
         My Bugs <span>({bugs.length})</span>

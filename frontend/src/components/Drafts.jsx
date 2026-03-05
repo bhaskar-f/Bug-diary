@@ -86,7 +86,11 @@ export default function Drafts() {
 
   return (
     <div className="min-h-screen w-full bg-zinc-50 lg:h-screen lg:flex lg:overflow-hidden">
-      <Leftnav />
+      <Leftnav
+        removetoken={removeToken}
+        username={user.username}
+        email={user.email}
+      />
       <div className="flex-1 min-w-0 h-full flex flex-col">
         <Topnav
           removetoken={removeToken}
